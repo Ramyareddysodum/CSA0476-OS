@@ -1,0 +1,33 @@
+1      #include <stdio.h>
+2      #include <stdlib.h>
+3      int main()
+4     {
+5	FILE *fptr1, *fptr2;
+6	char filename[100], c;
+7	printf("Enter the filename to open for reading \n");
+8	scanf("%s", filename);
+9	fptr1 = fopen("E:\i1.txt", "r");
+10	if (fptr1 == NULL)
+11	{
+12		printf("Cannot open file %s \n", filename);
+13		exit(0); 
+14	}
+15	printf("Enter the filename to open for writing \n");
+16	scanf("%s", filename);
+17	fptr2 = fopen("E:\i2.txt", "w");
+18	if (fptr2 == NULL)
+19	{
+20		printf("Cannot open file %s \n", filename);
+21		exit(0);
+22	}
+23	c = fgetc(fptr1);
+24	while (c != EOF)
+25	{
+26		fputc(c, fptr2);
+27		c = fgetc(fptr1);
+28	}
+29	printf("\nContents copied to %s", filename);
+30	fclose(fptr1);
+31	fclose(fptr2);
+32	return 0;
+33      }
