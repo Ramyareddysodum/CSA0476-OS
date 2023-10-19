@@ -1,0 +1,57 @@
+#include <stdio.h>
+#define MAX_MEMORY 1000 
+void initialize(int memory[], int size) {
+    for (int i = 0; i < size; i++) {
+        memory[i] = -1; 
+    }
+}
+void worstFit(int memory[], int size, int processSize, int processId) {
+    int worstFitIdx = -1; 
+    int worstFitSize = -1; 
+    for (int i = 0; i < size; i++) {
+        if (memory[i] == -1) {
+            int blockSize = 1;
+            for (int j = i + 1; j < size && memory[j] == -1; j++) {
+                blockSize++;
+            }
+            if (blockSize > worstFitSize) {
+                worstFitIdx = i;
+                worstFitSize = blockSize;
+            }
+            i += blockSize;
+        }
+    }
+    if (worstFitIdx != -1) {
+        for (int i = worstFitIdx; i < worstFitIdx + processSize; i++) {
+            memory[i] = processId;
+        }
+        printf("Process %d allocated in the worst fit block starting at index %d.\n", processId, worstFitIdx);
+    } else {
+        printf("Process %d could not be allocated. Not enough memory available.\n", processId);
+    }
+}
+void displayMemory(int memory[], int size) {
+    printf("Memory Allocation:\n");
+    for (int i = 0; i < size; i++) {
+        if (memory[i] == -1) {
+            printf("- ");
+        } else {
+            printf("%d ", memory[i]);
+        }
+    }
+    printf("\n");
+}
+int main() {
+    int memory[MAX_MEMORY];
+    int processCount, processSize;
+    initialize(memory, MAX_MEMORY);
+    printf("Enter the number of processes: ");
+    scanf("%d", &processCount);
+    for (int i = 1; i <= processCount; i++) {
+        printf("Enter the size of process %d: ", i);
+        scanf("%d", &processSize);
+        worstFit(memory, MAX_MEMORY, processSize, i);
+        displayMemory(memory, MAX_MEMORY);
+    }
+    return 0;
+}
