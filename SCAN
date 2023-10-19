@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, head, totalSeekTime = 0;
+
+    printf("Enter the number of disk requests: ");
+    scanf("%d", &n);
+
+    int requests[n];
+
+    printf("Enter the request queue:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+
+    // Sort the request queue to simulate SCAN algorithm
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (requests[i] > requests[j]) {
+                int temp = requests[i];
+                requests[i] = requests[j];
+                requests[j] = temp;
+            }
+        }
+    }
+
+    int direction;
+    printf("Enter the direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
+
+    int index;
+    for (index = 0; index < n; index++) {
+        if (direction == 0 && requests[index] > head) {
+            break;
+        }
+        if (direction == 1 && requests[index] >= head) {
+            break;
+        }
+    }
+
+    int prevRequest = head;
+    printf("Seek Sequence: %d", head);
+
+    for (int i = index; i < n; i++) {
+        printf(" -> %d", requests[i]);
+        totalSeekTime += abs(requests[i] - prevRequest);
+        prevRequest = requests[i];
+    }
+
+    if (direction == 0) {
+        // If the direction is left, we reach the left end
+        totalSeekTime += abs(0 - prevRequest);
+        printf(" -> 0");
+        prevRequest = 0;
+    } else {
+        // If the direction is right, we reach the right end
+        totalSeekTime += abs(199 - prevRequest);
+        printf(" -> 199");
+        prevRequest = 199;
+    }
+
+    for (int i = index - 1; i >= 0; i--) {
+        printf(" -> %d", requests[i]);
+        totalSeekTime += abs(requests[i] - prevRequest);
+        prevRequest = requests[i];
+    }
+
+    printf("\nTotal Seek Time: %d\n", totalSeekTime);
+
+    return 0;
+}
